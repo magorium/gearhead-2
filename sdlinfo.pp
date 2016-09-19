@@ -55,7 +55,7 @@ implementation
 
 uses 	sdl_ttf,description,texutil,gearutil,
 	ghmodule,ghchars,ghweapon,movement,ability,
-	narration,ui4gh,sdlmap;
+	narration,ui4gh,sdlmap, InitExitSystem;
 
 const
 	StatusPerfect:TSDL_Color =	( r:  0; g:255; b: 65 );
@@ -1438,7 +1438,9 @@ begin
 	SDL_SetClipRect( Game_Screen , Nil );
 end;
 
-initialization
+
+procedure sdlinfo_initialization;
+begin
 	Interact_Sprite := LocateSprite( Interact_Sprite_Name , 4 , 16 );
 	Module_Sprite := LocateSprite( Module_Sprite_Name , 16 , 16 );
 	PropStatus_Sprite := LocateSprite( PropStatus_Sprite_Name , 32 , 32 );
@@ -1452,8 +1454,18 @@ initialization
 	Concert_Mood_Sprite := LocateSprite( 'mini_mood.png' , 16 , 16 );
 
 	Master_Portrait_List := CreateFileList( Graphics_Directory + 'por_*.*' );
+end;
 
-finalization
+
+procedure sdlinfo_finalization;
+begin
     DisposeSAtt( Master_Portrait_List );
+end;
+
+
+initialization
+
+  Add2Init(@sdlinfo_initialization);
+  Add2Exit(@sdlinfo_finalization);
 
 end.

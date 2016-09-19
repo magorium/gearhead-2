@@ -388,6 +388,10 @@ Procedure MarkGearsWithSAtt( Master: GearPtr; const Info: String );
 
 implementation
 
+uses
+  InitExitSystem;
+
+
 Function LastSAtt( LList: SAttPtr ): SAttPtr;
 	{ Find the last SAtt in this particular list. }
 begin
@@ -1515,7 +1519,8 @@ begin
 end;
 
 
-initialization
+procedure gears_initialization;
+begin
 	{ Make sure we have the required data directories. }
     if paramcount() > 0 then begin
         Config_Directory := IncludeTrailingPathDelimiter( paramstr(1) );
@@ -1538,4 +1543,11 @@ initialization
 
 	{ Make sure we have the required data directories. }
 	CheckDirectoryPresent;
+end;
+
+
+initialization
+
+  Add2Init(@gears_initialization);
+
 end.

@@ -87,7 +87,7 @@ function RandomMap( Scene: GearPtr ): GameBoardPtr;
 
 implementation
 
-uses gearutil,ghprop,rpgdice,texutil,gearparser,narration,ui4gh,arenascript,ghchars,sysutils,ability,
+uses gearutil,ghprop,rpgdice,texutil,gearparser,narration,ui4gh,arenascript,ghchars,sysutils,ability, InitExitSystem,
 {$IFDEF ASCII}
 	vidgfx;
 {$ELSE}
@@ -3301,14 +3301,25 @@ begin
 end;
 
 
-initialization
+procedure randmaps_initialization;
+begin
 	Standard_Param_List := LoadStringList( RandMaps_Param_File );
 	random_scene_content := LoadRandomSceneContent( 'RANCON_*.txt' , series_directory );
 	super_prop_list := LoadRandomSceneContent( 'RANPROP_*.txt' , series_directory );
+end;
 
-finalization
+
+procedure randmaps_finalization;
+begin
 	DisposeSAtt( Standard_Param_List );
 	DisposeGear( random_scene_content );
 	DisposeGear( super_prop_list );
+end;
+
+
+initialization
+
+  Add2Init(@randmaps_initialization);
+  Add2Exit(@randmaps_finalization);
 
 end.

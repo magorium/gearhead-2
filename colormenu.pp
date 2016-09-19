@@ -57,7 +57,7 @@ Function RandomColorString( ColorSet: Integer ): String;
 
 implementation
 
-uses texutil;
+uses texutil, InitExitSystem;
 
 const
 	Swatch_Columns = 20;
@@ -429,13 +429,18 @@ begin
 end;
 
 
-
-initialization
+procedure colormenu_initialization;
+begin
 	LoadColorList;
 	cm_bits := LocateSprite( 'color_menu_bits.png' , '', Swatch_Width , Swatch_Height );
 	cm_panel := LocateSprite( 'color_menu.png' , '', cm_panel_width , cm_panel_height );
+end;
 
-finalization
 
+initialization
+
+  Add2Init(@colormenu_initialization);
 
 end.
+
+

@@ -343,6 +343,10 @@ Procedure SetupTitleScreenDisplay;
 
 implementation
 
+Uses
+  InitExitSystem;
+
+
 const
 	WindowName: PChar = 'GearHead II';
 	IconName: PChar = 'GearHead II';
@@ -1448,61 +1452,75 @@ begin
 
 end;
 
+
+procedure sdlgfx_initialization;
+begin
+  SDL_Init( SDL_INIT_VIDEO );
+
+  if DoFullScreen then 
+  begin
+    Game_Screen := SDL_SetVideoMode(ScreenWidth, ScreenHeight, 32, SDL_DOUBLEBUF or SDL_FULLSCREEN );
+  end 
+  else 
+  begin
+{		Game_Screen := SDL_SetVideoMode(ScreenWidth, ScreenHeight, 0, SDL_DOUBLEBUF or SDL_HWSURFACE );}
+    Game_Screen := SDL_SetVideoMode(ScreenWidth, ScreenHeight, 0, SDL_HWSURFACE or SDL_DoubleBuf or SDL_RESIZABLE );
+  end;
+
+  if Ersatz_Mouse then SDL_ShowCursor( SDL_Disable );
+
+  ClrScreen;
+  SDL_SetColorKey( Game_Screen , SDL_SRCCOLORKEY or SDL_RLEACCEL , SDL_MapRGB( Game_Screen^.Format , 0 , 0 , 255 ) );
+
+  SDL_EnableUNICODE( 1 );
+  SDL_EnableKeyRepeat( KEY_REPEAT_DELAY , KEY_REPEAT_INTERVAL );
+
+  TTF_Init;
+
+  Game_Font := TTF_OpenFont( Graphics_Directory + 'VeraBd.ttf' , FontSize );
+  Small_Font := TTF_OpenFont( Graphics_Directory + 'VeraBd.ttf' , SmallFontSize );
+
+  Game_Sprites := Nil;
+
+  Cursor_Sprite := LocateSprite( 'cursor.png' , 8 , 16 );
+  Title_Screen := LocateSprite( 'title_screen.png' , 800 , 600 );
+  Ersatz_Mouse_Sprite := LocateSprite( 'ersatz_mouse.png' , 16 , 16 );
+
+  Console_History := Nil;
+
+  Last_Clock_Update := 0;
+
+  if Splash_Screen_At_Start then 
+  begin
+    Randomize();
+    Idle_Display;
+  end;
+
+  SDL_WM_SetCaption( WindowName , IconName );
+
+  Infobox_Border := LocateSprite( 'sys_boxborder.png' , 8 , 8 );
+  Infobox_Backdrop := LocateSprite( 'sys_boxbackdrop.png' , 16 , 16 );
+
+  if Transparent_Interface then SDL_SetAlpha( Infobox_Backdrop^.Img , SDL_SRCAlpha , 224 );
+end;
+
+
+procedure sdlgfx_finalization;
+begin
+  DisposeSAtt( Console_History );
+  DisposeSpriteList( Game_Sprites );
+  TTF_CloseFont( Game_Font );
+  TTF_CloseFont( Small_Font );
+  TTF_Quit;
+
+  SDL_FreeSurface( Game_Screen );
+  SDL_Quit;
+end;
+
+
 initialization
 
-	SDL_Init( SDL_INIT_VIDEO );
+  Add2Init(@sdlgfx_initialization);
+  Add2Exit(@sdlgfx_finalization);
 
-	if DoFullScreen then begin
-		Game_Screen := SDL_SetVideoMode(ScreenWidth, ScreenHeight, 32, SDL_DOUBLEBUF or SDL_FULLSCREEN );
-	end else begin
-{		Game_Screen := SDL_SetVideoMode(ScreenWidth, ScreenHeight, 0, SDL_DOUBLEBUF or SDL_HWSURFACE );}
-		Game_Screen := SDL_SetVideoMode(ScreenWidth, ScreenHeight, 0, SDL_HWSURFACE or SDL_DoubleBuf or SDL_RESIZABLE );
-	end;
-
-	if Ersatz_Mouse then SDL_ShowCursor( SDL_Disable );
-
-	ClrScreen;
-	SDL_SetColorKey( Game_Screen , SDL_SRCCOLORKEY or SDL_RLEACCEL , SDL_MapRGB( Game_Screen^.Format , 0 , 0 , 255 ) );
-
-        SDL_EnableUNICODE( 1 );
-	SDL_EnableKeyRepeat( KEY_REPEAT_DELAY , KEY_REPEAT_INTERVAL );
-
-	TTF_Init;
-
-	Game_Font := TTF_OpenFont( Graphics_Directory + 'VeraBd.ttf' , FontSize );
-	Small_Font := TTF_OpenFont( Graphics_Directory + 'VeraBd.ttf' , SmallFontSize );
-
-	Game_Sprites := Nil;
-
-	Cursor_Sprite := LocateSprite( 'cursor.png' , 8 , 16 );
-	Title_Screen := LocateSprite( 'title_screen.png' , 800 , 600 );
-	Ersatz_Mouse_Sprite := LocateSprite( 'ersatz_mouse.png' , 16 , 16 );
-
-	Console_History := Nil;
-
-	Last_Clock_Update := 0;
-
-	if Splash_Screen_At_Start then begin
-		Randomize();
-		Idle_Display;
-	end;
-
-	SDL_WM_SetCaption( WindowName , IconName );
-
-	Infobox_Border := LocateSprite( 'sys_boxborder.png' , 8 , 8 );
-	Infobox_Backdrop := LocateSprite( 'sys_boxbackdrop.png' , 16 , 16 );
-
-	if Transparent_Interface then SDL_SetAlpha( Infobox_Backdrop^.Img , SDL_SRCAlpha , 224 );
-
-
-finalization
-
-	DisposeSAtt( Console_History );
-	DisposeSpriteList( Game_Sprites );
-	TTF_CloseFont( Game_Font );
-	TTF_CloseFont( Small_Font );
-	TTF_Quit;
-
-	SDL_FreeSurface( Game_Screen );
-	SDL_Quit;
 end.

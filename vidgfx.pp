@@ -377,6 +377,9 @@ Procedure SetupTitleScreenDisplay;
 
 implementation
 
+uses
+  InitExitSystem;
+
 Function VGFX_Zone.GetRect(): VGFX_Rect;
 	{ Convert the provided zone to a rect. }
 var
@@ -1046,8 +1049,8 @@ begin
 end;
 
 
-
-initialization
+procedure vidgfx_initialization;
+begin
 	InitVideo;
 
 	InitKeyboard;
@@ -1073,8 +1076,11 @@ initialization
 	ZONE_CharGenMenu := ZONE_Menu1;
 	ZONE_CharGenCaption := ZONE_Menu2;
 	ZONE_CharGenPrompt := ZONE_Info;
+end;
 
-finalization
+
+procedure vidgfx_finalization;
+begin
 {$IFNDEF ASCII}
 	ClrScreen;
 	DoFlip;
@@ -1083,5 +1089,12 @@ finalization
 	DoneKeyboard;
 
 	DisposeSAtt( Console_History );
+end;
+
+
+initialization
+
+  Add2Init(@vidgfx_initialization);
+  Add2Exit(@vidgfx_finalization);
 
 end.

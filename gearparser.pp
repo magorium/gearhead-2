@@ -71,7 +71,7 @@ Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: Strin
 
 implementation
 
-uses ghswag,
+uses ghswag, InitExitSystem,
 {$IFDEF ASCII}
 	vidgfx;
 {$ELSE}
@@ -1668,7 +1668,9 @@ begin
 	end;
 end;
 
-initialization
+
+procedure gearparser_initialization;
+begin
 	Parser_Macros := LoadStringList( Parser_Macro_File );
 	standard_script_list := LoadFile( 'standard_scripts.txt' , Data_Directory );
 	STC_Item_List := AggregatePattern( STC_Item_Pattern , Series_Directory );
@@ -1680,8 +1682,11 @@ initialization
 
 	Factions_List := AggregatePattern( 'FACTIONS_*.txt' , Series_Directory );
 	Mecha_Theme_List := AggregatePattern( 'THEME_*.txt' , Series_Directory );
+end;
 
-finalization
+
+procedure gearparser_finalization;
+begin
 	DisposeSAtt( Parser_Macros );
 	DisposeGear( Archetypes_List );
 	DisposeGear( WMonList );
@@ -1690,4 +1695,12 @@ finalization
 	DisposeGear( Factions_List );
 	DisposeGear( Mecha_Theme_List );
 	DisposeGear( Standard_Script_List );
+end;
+
+
+initialization
+
+  Add2Init(@gearparser_initialization);
+  Add2Exit(@gearparser_finalization);
+
 end.

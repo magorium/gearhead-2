@@ -50,6 +50,9 @@ Function RollStat(n: integer): integer;
 
 implementation
 
+uses
+  InitExitSystem;
+
 const
    { Limit on value returned (the Pascal distribution has no natural upper
      bound).  The optimized version requires that the limit be 30 units under
@@ -366,8 +369,15 @@ begin
 end;
 
 
-initialization
+procedure rpgdice_initialization;
+begin
 	{Set the random seed}
 	Randomize;
+end;
+
+
+initialization
+
+  Add2Init(@rpgdice_initialization);
 
 end.

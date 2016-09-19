@@ -159,7 +159,7 @@ implementation
 
 uses ability,action,gearutil,ghchars,ghmodule,ghguard,gearparser,ui4gh,
      ghprop,ghsensor,ghsupport,ghweapon,movement,rpgdice,skilluse,texutil,
-	ghholder,ghmecha,ghmovers;
+	ghholder,ghmecha,ghmovers, InitExitSystem;
 
 Type
 	EffectRequest = Record
@@ -3088,12 +3088,22 @@ begin
 end;
 
 
-initialization
+procedure effects_initialization;
+begin
 	{ Set the history list to 0, for now. }
 	ATTACK_History := Nil;
 	EFFECTS_Event_Order := 0;
+end;
 
-finalization
+procedure effects_finalization;
+begin
 	DisposeSAtt( ATTACK_History );
+end;
+
+
+initialization
+
+  Add2Init(@effects_initialization);
+  Add2Exit(@effects_finalization);
 
 end.

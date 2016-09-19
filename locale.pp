@@ -674,7 +674,7 @@ Function IsHidden( Mek: GearPtr ): Boolean;
 implementation
 
 { Include specific GH*.pp units here. }
-uses ghweapon,ghprop,ghchars,texutil,ghmovers;
+uses ghweapon,ghprop,ghchars,texutil,ghmovers, InitExitSystem;
 
 Type
 	LPattern = Record	{ Location Pattern }
@@ -3448,8 +3448,15 @@ begin
 	IsHidden := IH;
 end;
 
-initialization
-	Shadow_Map_Update := -1;
 
+procedure locale_initialization;
+begin
+  Shadow_Map_Update := -1;
+end;
+
+
+initialization
+
+  Add2Init(@locale_initialization);
 
 end.

@@ -80,7 +80,7 @@ Procedure WaitAMinute( GB: GameBoardPtr; Mek: GearPtr; D: Integer );
 implementation
 
 uses 	ability,gearutil,ghchars,ghmodule,ghweapon,movement,rpgdice,texutil,
-	math,ui4gh,ghintrinsic,ghsensor,ghprop,ghsupport,
+	math,ui4gh,ghintrinsic,ghsensor,ghprop,ghsupport, InitExitSystem,
 {$IFDEF ASCII}
 	vidgfx;
 {$ELSE}
@@ -1562,10 +1562,20 @@ end;
 
 
 
-initialization
-	Destroyed_Parts_List := Nil;
+procedure action_initialization;
+begin
+  Destroyed_Parts_List := Nil;
+end;
 
-finalization
-	DisposeSAtt( Destroyed_Parts_List );
+procedure action_finalization;
+begin
+  DisposeSAtt( Destroyed_Parts_List );
+end;
+
+
+initialization
+
+  Add2Init(@action_initialization);
+  Add2Exit(@action_finalization);
 
 end.

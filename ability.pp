@@ -148,7 +148,7 @@ Function Calculate_Threat_Points( Level,Percent: Integer ): LongInt;
 
 implementation
 
-uses ghchars,ghmodule,ghholder,ghsensor,ghmecha;
+uses ghchars,ghmodule,ghholder,ghsensor,ghmecha, InitExitSystem;
 
 Function LocatePilot( Mecha: GearPtr ): GearPtr;
 	{ Locate the pilot of this mecha. If no pilot may be found, }
@@ -896,10 +896,20 @@ begin
 	Calculate_Threat_Points := it;
 end;
 
-initialization
-	Skill_Roll_History := Nil;
+procedure ability_initialization;
+begin
+  Skill_Roll_History := Nil;
+end;
 
-finalization
-	DisposeSATt( Skill_Roll_History );
+procedure ability_finalization;
+begin
+  DisposeSATt( Skill_Roll_History );
+end;
+
+
+initialization
+
+  Add2Init(@ability_initialization);
+  Add2Exit(@ability_Finalization);
 
 end.

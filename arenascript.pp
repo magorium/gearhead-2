@@ -138,7 +138,7 @@ implementation
 uses action,arenacfe,ability,gearutil,ghchars,gearparser,ghmodule,backpack,
      ghprop,ghweapon,grabgear,interact,menugear,playwright,rpgdice,
      services,texutil,ui4gh,wmonster,narration,description,skilluse,
-	ghintrinsic,movement,minigame,customization,aibrain,mpbuilder,
+	ghintrinsic,movement,minigame,customization,aibrain,mpbuilder, InitExitSystem,
 {$IFDEF ASCII}
 	vidmap,vidinfo;
 {$ELSE}
@@ -6088,7 +6088,10 @@ begin
     end;
 end;
 
-initialization
+
+
+procedure arenscript_initialization;
+begin
 	SCRIPT_DynamicEncounter := Nil;
 	Grabbed_Gear := Nil;
 	Script_Macros := LoadStringList( Script_Macro_File );
@@ -6109,8 +6112,11 @@ initialization
 	IntMenu := Nil;
 
     NeedGC := False;
+end;
 
-finalization
+
+procedure arenscript_finalization;
+begin
 	if SCRIPT_DynamicEncounter <> Nil then begin
 		DisposeGear( SCRIPT_DynamicEncounter );
 	end;
@@ -6121,4 +6127,12 @@ finalization
 	DisposeGear( BLANK_PERSONA );
 	DisposeGear( rumor_leads );
 	if local_triggers <> Nil then DisposeSATt( local_triggers );
+end;
+
+
+initialization
+
+  Add2Init(@arenscript_initialization);
+  Add2Exit(@arenscript_finalization);
+
 end.

@@ -75,7 +75,7 @@ Procedure InitGraphicsForScene( GB: GameBoardPtr );
 
 implementation
 
-uses ghmecha,ghchars,gearutil,ability,ghprop,effects,narration,ui4gh,colormenu;
+uses ghmecha,ghchars,gearutil,ability,ghprop,effects,narration,ui4gh,colormenu, InitExitSystem;
 
 type
 	Cute_Map_Cel_Description = Record
@@ -1210,7 +1210,9 @@ begin
 	For BDNum := 1 to NumCMCelLayers do ClearCMCelLayer( BDNum );
 end;
 
-initialization
+
+procedure sdlmap_initialization;
+begin
 	RPGKey;
 
 	SDL_PumpEvents;
@@ -1245,6 +1247,11 @@ initialization
 
 	ClearOverlays;
 	Focused_On_Mek := Nil;
+end;
 
+
+initialization
+
+  Add2Init(@sdlmap_initialization);
 
 end.

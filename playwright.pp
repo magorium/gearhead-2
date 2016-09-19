@@ -96,7 +96,7 @@ Procedure ClearChoiceList( Story: GearPtr );
 implementation
 
 uses 	ui4gh,rpgdice,texutil,gearutil,interact,ability,gearparser,ghchars,narration,ghprop,
-	arenascript,chargen,wmonster,
+	arenascript,chargen,wmonster, InitExitSystem,
 {$IFDEF ASCII}
 	vidgfx,vidmenus;
 {$ELSE}
@@ -2578,18 +2578,28 @@ begin
 end;
 
 
-
-initialization
+procedure playwright_initialization;
+begin
 	persona_fragments := AggregatePattern( 'PFRAG_*.txt' , series_directory );
 	if persona_fragments = Nil then writeln( 'ERROR!!!' );
 	Standard_Plots := LoadRandomSceneContent( 'PLOT_*.txt' , series_directory );
 	Standard_Moods := AggregatePattern( 'MOOD_*.txt' , series_directory );
 	Dramatic_Choices := AggregatePattern( 'CHOICE_*.txt' , series_directory );
+end;
 
-finalization
+
+procedure playwright_finalization;
+begin
 	DisposeGear( persona_fragments );
 	DisposeGear( Standard_Plots );
 	DisposeGear( Standard_Moods );
 	DisposeGear( Dramatic_Choices );
+end;
+
+
+initialization
+
+  Add2Init(@playwright_initialization);
+  Add2Exit(@playwright_finalization);
 
 end.

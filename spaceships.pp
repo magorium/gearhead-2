@@ -30,7 +30,7 @@ Function NewSpaceship( GB: GameBoardPtr; const Desig: String );
 
 implementation
 
-uses gearparser,gearutil;
+uses gearparser,gearutil, InitExitSystem;
 
 var
 	Spaceship_Prototype_List: GearPtr;
@@ -43,11 +43,22 @@ begin
 
 end;
 
-initialization
+
+procedure spaceships_initialization;
+begin
 	Spaceship_Prototype_List := AggregatePattern( 'SHIP_*.txt' , Series_Directory );
+end;
 
 
-finalization
+procedure spaceships_finalization;
+begin
 	DisposeGear( Spaceship_Prototype_List );
+end;
+
+
+initialization
+
+  Add2Init(@spaceships_initialization);
+  Add2Exit(@spaceships_finalization);
 
 end.

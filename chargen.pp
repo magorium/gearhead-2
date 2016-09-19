@@ -62,7 +62,7 @@ Function RandomNPC( Adv: GearPtr; Fac,Hometown: Integer ): GearPtr;
 implementation
 
 uses 	gearutil,ghchars,texutil,ui4gh,description,gearparser,playwright,
-	ability,wmonster,dos,locale,menugear,
+	ability,wmonster,dos,locale,menugear, InitExitSystem,
 {$IFDEF ASCII}
 	vidgfx,vidinfo,vidmenus;
 {$ELSE}
@@ -1664,7 +1664,9 @@ begin
 	end;
 end;
 
-initialization
+
+procedure chargen_initialization;
+begin
 	Jobs_List := AggregatePattern( 'CG_JOBS_*.txt' , Series_Directory );
 	Family_List := LoadRandomSceneContent( 'CG_FAMILY_*.txt' , Series_Directory );
 	Bio_List := LoadRandomSceneContent( 'CG_BIO_*.txt' , Series_Directory );
@@ -1672,13 +1674,22 @@ initialization
 	Focus_List := AggregatePattern( 'CG_FOCUS_*.txt' , Series_Directory );
 	Hometown_List := AggregatePattern( 'ATLAS_*.txt' , Series_Directory );
 	TrimTheAtlas();
+end;
 
-finalization
+procedure chargen_finalization;
+begin
 	DisposeGear( Jobs_List );
 	DisposeGear( Family_List );
 	DisposeGear( Bio_List );
 	DisposeGear( Goal_List );
 	DisposeGear( Focus_List );
 	DisposeGear( Hometown_List );
+end;
+
+
+initialization
+
+  Add2Init(@chargen_initialization);
+  Add2Exit(@chargen_finalization);
 
 end.

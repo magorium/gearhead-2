@@ -46,7 +46,7 @@ Procedure RenderWorldMap( GB: GameBoardPtr; PC: GearPtr; X0,Y0: Integer );
 
 implementation
 
-uses ui4gh,vidgfx,video,ability,ghprop,gearutil,effects;
+uses ui4gh,vidgfx,video,ability,ghprop,gearutil,effects, InitExitSystem;
 
 const
 	TerrGfx: Array [1..NumTerr] of Char = (
@@ -525,8 +525,15 @@ begin
 end;
 
 
-initialization
+procedure vidmap_initialization;
+begin
 	Focused_On_Mek := Nil;
 	ClearOverlays;
+end;
+
+
+initialization
+
+  Add2Init(@vidmap_initialization);
 
 end.

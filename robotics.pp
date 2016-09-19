@@ -47,7 +47,7 @@ implementation
 
 uses 	gearutil,ghchars,texutil,arenacfe,ability,ui4gh,menugear,
 	rpgdice,ghmodule,ghholder,ghmovers,action,narration,interact,
-	arenascript,gearparser,
+	arenascript,gearparser, InitExitSystem,
 {$IFDEF ASCII}
 	vidgfx,vidmenus,vidinfo;
 {$ELSE}
@@ -604,12 +604,24 @@ begin
 	end;
 end;
 
-initialization
+
+procedure robotics_initialization;
+begin
 	{ Load the robotic forms from disk. }
 	Robotic_Forms := AggregatePattern( 'ROBOTS_*.txt' , Series_Directory );
+end;
 
-finalization
+
+procedure robotics_finalization;
+begin
 	{ Dispose of the robotic forms. }
 	DisposeGear( Robotic_Forms );
+end;
+
+
+initialization
+
+  Add2Init(@robotics_initialization);
+  Add2Exit(@robotics_finalization);
 
 end.

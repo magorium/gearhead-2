@@ -56,7 +56,7 @@ Function AddQuest( Adv,City,QPF_Proto: GearPtr; var Quest_Frags: GearPtr; QReq: 
 implementation
 
 uses playwright,texutil,gearutil,gearparser,ghchars,randmaps,
-	ui4gh,wmonster,rpgdice,ghprop,ability,
+	ui4gh,wmonster,rpgdice,ghprop,ability, InitExitSystem,
 {$IFDEF ASCII}
 	vidgfx,vidmenus;
 {$ELSE}
@@ -1856,18 +1856,28 @@ begin
 end;
 
 
-initialization
+procedure mpbuilder_initialization;
+begin
 	{ Load the list of subplots from disk. }
 	Sub_Plot_List := LoadRandomSceneContent( 'MEGA_*.txt' , series_directory );
 	standard_trigger_list := LoadStringList( Data_Directory + 'standard_triggers.txt' );
 	InitPlaceStrings( Sub_Plot_List );
 	MasterEntranceList := AggregatePattern( 'ENTRANCE_*.txt' , Series_Directory );
+end;
 
 
-finalization
+procedure mpbuilder_finalization;
+begin
 	{ Dispose of the list of subplots. }
 	DisposeGear( Sub_Plot_List );
 	DisposeSAtt( standard_trigger_list );
 	DisposeGear( MasterEntranceList );
+end;
+
+
+initialization
+
+  Add2Init(@mpbuilder_initialization);
+  Add2Exit(@mpbuilder_finalization);
 
 end.

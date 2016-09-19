@@ -60,7 +60,7 @@ implementation
 uses arenaplay,arenascript,interact,gearutil,narration,texutil,ghprop,rpgdice,ability,
      ghchars,ghweapon,movement,ui4gh,gearparser,playwright,randmaps,wmonster,
 	pcaction,menugear,navigate,services,skilluse,training,backpack,chargen,
-	description,
+	description, InitExitSystem,
 {$IFDEF ASCII}
 	vidinfo,vidmap,vidmenus;
 {$ELSE}
@@ -2299,7 +2299,9 @@ begin
 	DisposeRPGMenu( RPM );
 end;
 
-initialization
+
+procedure gh2arena_initialization;
+begin
 	{ Set all things to NIL to begin with. }
 	ADR_PilotMenu := Nil;
 	ADR_MechaMenu := Nil;
@@ -2309,11 +2311,20 @@ initialization
 
 	Arena_Mission_Master_List := LoadRandomSceneContent( 'ARENAMISSION_*.txt' , Series_Directory );
 	Core_Mission_Master_List := LoadRandomSceneContent( 'ARENACORE_*.txt' , Series_Directory );
+end;
 
 
-finalization
+procedure gh2arena_finalization;
+begin
 	DisposeGear( Arena_Mission_Master_List );
 	DisposeGear( Core_Mission_Master_List );
 	DisposeGear( ANPC_MasterPersona );
+end;
+
+
+initialization
+
+  Add2Init(@gh2arena_initialization);
+  Add2Exit(@gh2arena_finalization);
 
 end.

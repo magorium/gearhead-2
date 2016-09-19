@@ -132,8 +132,11 @@ Procedure InitMapFeature( Part: GearPtr );
 
 Function RandomBuildingName( B: GearPtr ): String;
 
+
 implementation
 
+uses
+  InitExitSystem;
 
 
 Procedure CheckPropRange( Part: GearPtr );
@@ -233,10 +236,21 @@ begin
 end;
 
 
-initialization
-	LoadMetaScripts;
+procedure ghprop_initialization;
+begin
+  LoadMetaScripts;
+end;
 
-finalization
-	ClearMetaScripts;
+
+procedure ghprop_finalization;
+begin
+  ClearMetaScripts;
+end;
+
+
+initialization
+
+  Add2Init(@ghprop_initialization);
+  Add2Exit(@ghprop_finalization);
 
 end.

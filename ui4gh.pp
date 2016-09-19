@@ -431,6 +431,9 @@ Function MsgString( const MsgLabel: String ): String;
 
 implementation
 
+uses
+  InitExitSystem;
+
 Procedure LoadConfig;
 	{ Open the configuration file and set the variables }
 	{ as needed. }
@@ -713,12 +716,23 @@ begin
 	MsgString := SAttValue( Text_Messages , MsgLabel );
 end;
 
-initialization
+
+procedure ui4gh_initialization;
+begin
 	Text_Messages := LoadStringList( Standard_Message_File );
 	LoadConfig;
+end;
 
-finalization
+procedure ui4gh_finalization;
+begin
 	SaveConfig;
 	DisposeSAtt( Text_Messages );
+end;
+
+
+initialization
+
+  Add2Init(@ui4gh_initialization);
+  Add2Exit(@ui4gh_finalization);
 
 end.

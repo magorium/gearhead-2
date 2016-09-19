@@ -61,7 +61,7 @@ Procedure ResolveAfterEffects( GB: GameBoardPtr );
 implementation
 
 uses ability,effects,gearutil,ghchars,ghweapon,rpgdice,texutil,movement,
-     ui4gh,sysutils,description,action,ghmodule,backpack,
+     ui4gh,sysutils,description,action,ghmodule,backpack, InitExitSystem,
 {$IFDEF ASCII}
 	vidmap,vidgfx,vidinfo;
 {$ELSE}
@@ -1298,13 +1298,20 @@ begin
 end;
 
 
+procedure arenacfe_initialization;
+begin
+  NPC_Chatter_Standard := LoadStringList( NPC_Chatter_File );
+end;
+
+procedure arenacfe_finalization;
+begin
+  DisposeSAtt( NPC_Chatter_Standard );
+end;
+
+
 initialization
 
-	NPC_Chatter_Standard := LoadStringList( NPC_Chatter_File );
-
-finalization
-
-	DisposeSAtt( NPC_Chatter_Standard );
-
+  Add2Init(@arenacfe_initialization);
+  Add2Exit(@arenacfe_finalization);
 
 end.

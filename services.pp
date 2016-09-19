@@ -67,7 +67,7 @@ implementation
 uses ability,arenacfe,backpack,gearutil,ghchars,ghmodule,gearparser,
      ghswag,ghweapon,interact,menugear,rpgdice,skilluse,texutil,
      description,narration,ui4gh,ghprop,
-     customization,
+     customization, InitExitSystem,
 {$IFDEF ASCII}
 	vidgfx,vidmap,vidmenus,vidinfo;
 {$ELSE}
@@ -2171,14 +2171,25 @@ begin
 
 end;
 
-initialization
+
+procedure services_initialization;
+begin
 	SERV_GB := Nil;
 	SERV_NPC := Nil;
 
 	Standard_Caliber_List := AggregatePattern( 'CALIBER_*.txt' , Data_Directory );
+end;
 
 
-finalization
+procedure services_finalization;
+begin
 	DisposeGear( Standard_Caliber_List );
+end;
+
+
+initialization
+
+  Add2Init(@services_initialization);
+  Add2Exit(@services_finalization);
 
 end.

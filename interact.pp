@@ -98,7 +98,7 @@ Procedure AddReact( GB: GameBoardPtr; PC,NPC: GearPtr; DReact: Integer );
 
 implementation
 
-uses narration,texutil,rpgdice,ghchars,gearutil,ability,ui4gh,ghprop,action;
+uses narration,texutil,rpgdice,ghchars,gearutil,ability,ui4gh,ghprop,action, InitExitSystem;
 
 const
 	Num_Openings = 7;	{ Number of TraitChatter opening phrases. }
@@ -723,8 +723,9 @@ begin
 	end;
 end;
 
-initialization
 
+procedure interact_initialization;
+begin
 	Noun_List := LoadStringList( Standard_Nouns_File );
 	Phrase_List := LoadStringList( Standard_Phrases_File );
 	Adjective_List := LoadStringList( Standard_Adjectives_File );
@@ -732,8 +733,11 @@ initialization
 	Threat_List := LoadStringList( Standard_Threats_File );
 	Chat_Msg_List := LoadStringList( Standard_Chatter_File );
 	LoadTraitChatter;
+end;
 
-finalization
+
+procedure interact_finalization;
+begin
 	DisposeSAtt( Noun_List );
 	DisposeSAtt( Phrase_List );
 	DisposeSAtt( Adjective_List );
@@ -741,4 +745,12 @@ finalization
 	DisposeSAtt( Threat_List );
 	DisposeSAtt( Chat_Msg_List );
 	FreeTraitChatter;
+end;
+
+
+initialization
+
+  Add2Init(@interact_initialization);
+  Add2Exit(@interact_finalization);
+
 end.

@@ -31,7 +31,7 @@ program gearhead2;
 {$ENDIF}
 
 uses 	gears,navigate,randmaps,locale,arenaplay,ghchars,gearutil,gearparser,
-	ability,chargen,backpack,ui4gh,gh2arena,menugear,
+	ability,chargen,backpack,ui4gh,gh2arena,menugear, InitExitSystem,
 {$IFDEF ASCII}
 	vidgfx,vidmap,vidmenus;
 {$ELSE}
@@ -189,6 +189,8 @@ var
 	N: Integer;
 
 begin
+    ProcessInit;
+
 	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Title_Screen_Menu );
     {$IFNDEF ASCII}
     RPM^.mode := RPMNoCancel;
@@ -230,4 +232,6 @@ begin
 
 	{deallocate all dynamic resources.}
 	DisposeRPGMenu( RPM );
+
+    ProcessExit;
 end.

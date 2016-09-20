@@ -184,6 +184,7 @@ begin
 end;
 
 
+procedure Start_gearhead2;
 var
 	RPM: RPGMenuPtr;
 	N: Integer;
@@ -234,4 +235,9 @@ begin
 	DisposeRPGMenu( RPM );
 
     ProcessExit;
+end;
+
+
+begin
+  Start_gearhead2;
 end.

@@ -35,6 +35,9 @@ uses 	gears,navigate,randmaps,locale,arenaplay,ghchars,gearutil,gearparser,
 {$IFDEF ASCII}
 	vidgfx,vidmap,vidmenus;
 {$ELSE}
+    {$IFDEF AROS}
+    arosc_static_link,
+    {$ENDIF}
 	sdlgfx,sdlmap,sdlmenus;
 {$ENDIF}
 
@@ -183,15 +186,19 @@ begin
 	DisposeRPGMenu( MekMenu );
 end;
 
-
 procedure Start_gearhead2;
 var
 	RPM: RPGMenuPtr;
 	N: Integer;
 
 begin
+    {$IFDEF AROS}
+    DebugLn('enter - Start_gearhead2()');
+    {$ENDIF}
     ProcessInit;
-
+    {$IFDEF AROS}
+    DebugLn('Start_gearhead2() - begin');
+    {$ENDIF}
 	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Title_Screen_Menu );
     {$IFNDEF ASCII}
     RPM^.mode := RPMNoCancel;
@@ -233,11 +240,20 @@ begin
 
 	{deallocate all dynamic resources.}
 	DisposeRPGMenu( RPM );
-
+    {$IFDEF AROS}
+    DebugLn('Start_gearhead2() - end');
+    {$ENDIF}
     ProcessExit;
+    {$IFDEF AROS}
+    DebugLn('leave - Start_gearhead2()');
+    {$ENDIF}
 end;
 
 
 begin
+  {$IFDEF AROS}
+  AROSC_Init(@Start_gearhead2);
+  {$ELSE}
   Start_gearhead2;
+  {$ENDIF}
 end.

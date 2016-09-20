@@ -1528,7 +1528,11 @@ begin
     {$IFDEF WINDOWS}
         Config_Directory := GetUserDir() + OS_Dir_Separator + 'gearhead2' + OS_Dir_Separator;
     {$ELSE}
+        {$IFDEF AROS}
+        Config_Directory := IncludeTrailingPathDelimiter(GetAppConfigDir(False));
+        {$ELSE}
         Config_Directory := GetAppConfigDir(False);
+        {$ENDIF}
     {$ENDIF}
     end;
 	Config_File := Config_Directory + 'gearhead2.cfg';
